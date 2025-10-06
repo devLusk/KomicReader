@@ -9,6 +9,7 @@ lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2025.09.01"
 koinBom = "4.1.1"
+navigation3 = "1.0.0-alpha10"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,10 +26,25 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinBom" }
 koin-core = { module = "io.insert-koin:koin-core" }
 koin-android = { module = "io.insert-koin:koin-android" }
 koin-android-startup = { module = "io.insert-koin:koin-androidx-startup" }
+
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
+
+[bundles]
+koin = [
+    "koin-core",
+    "koin-android",
+    "koin-android-startup"
+]
+navigation3 = [
+    "androidx-navigation3-runtime",
+    "androidx-navigation3-ui"
+]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

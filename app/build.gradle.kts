@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.dv.apps.komic.reader"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -34,8 +34,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+            freeCompilerArgs.add("-Xlambdas=class")
+        }
     }
     buildFeatures {
         compose = true
@@ -54,9 +57,9 @@ dependencies {
     implementation(libs.androidx.compose.material3)
 
     implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
-    implementation(libs.koin.android.startup)
+    implementation(libs.bundles.koin)
+
+    implementation(libs.bundles.navigation3)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
