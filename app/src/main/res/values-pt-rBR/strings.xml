@@ -2,5 +2,5 @@
 <resources>
     <string name="menu_home">Início</string>
     <string name="menu_shelf">Prateleira</string>
-    <string name="menu_confi">Configuração</string>
+    <string name="menu_settings">Configuração</string>
 </resources>
