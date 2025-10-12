@@ -3,4 +3,6 @@
     <string name="menu_home">Início</string>
     <string name="menu_shelf">Prateleira</string>
     <string name="menu_settings">Configuração</string>
+
+    <string name="folder_source_settings_section_title">Pastas selecionadas</string>
 </resources>

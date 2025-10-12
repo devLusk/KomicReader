@@ -4,4 +4,6 @@
     <string name="menu_home">Home</string>
     <string name="menu_shelf">Shelf</string>
     <string name="menu_settings">Configuration</string>
+    
+    <string name="folder_source_settings_section_title">Selected folders</string>
 </resources>
