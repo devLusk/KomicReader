@@ -58,19 +58,18 @@ fun FolderSourceSettingsSection(
 
         if (state.selectedFolders.isNotEmpty()) {
             HorizontalDivider(
-                Modifier
-                    .padding(horizontal = 8.dp)
+                Modifier.padding(horizontal = 8.dp)
             )
-        }
 
-        Column(Modifier.padding(vertical = 8.dp)) {
-            for (folder in state.selectedFolders) {
-                Text(
-                    folder
-                        .path
-                        .split(":")
-                        .last()
-                )
+            Column(Modifier.padding(vertical = 8.dp)) {
+                for (folder in state.selectedFolders) {
+                    Text(
+                        folder
+                            .path
+                            .split(":")
+                            .last()
+                    )
+                }
             }
         }
     }
@@ -78,7 +77,7 @@ fun FolderSourceSettingsSection(
 
 @Preview
 @Composable
-private fun FolderScreenPreview() {
+private fun FolderScreenPreview1() {
     KomicReaderTheme {
         SettingsSection {
             FolderSourceSettingsSection(
@@ -89,6 +88,20 @@ private fun FolderScreenPreview() {
                             "folder/$it"
                         )
                     }
+                )
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun FolderScreenPreview2() {
+    KomicReaderTheme {
+        SettingsSection {
+            FolderSourceSettingsSection(
+                state = State(
+                    selectedFolders = emptyList()
                 )
             )
         }

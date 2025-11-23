@@ -69,11 +69,3 @@ private fun SettingsSectionPreview() {
     }
 }
 
-@PreviewScreenSizes
-@Composable
-fun SettingsScreenPreview() {
-    KomicReaderTheme {
-        SettingsScreen()
-    }
-}
-
