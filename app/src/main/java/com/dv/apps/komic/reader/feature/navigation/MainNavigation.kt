@@ -3,9 +3,7 @@ package com.dv.apps.komic.reader.feature.navigation
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsTopHeight
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
@@ -21,6 +19,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.dv.apps.komic.reader.R
 import com.dv.apps.komic.reader.feature.settings.SettingsScreen
+import com.dv.apps.komic.reader.feature.shelf.ShelfScreen
 import com.dv.apps.komic.reader.ui.theme.KomicReaderTheme
 
 @Composable
@@ -74,7 +73,7 @@ fun MainNavigator(
             entry<Destination> {
                 when (it) {
                     Destination.HOME -> Text("Home")
-                    Destination.SHELF -> Text("Shelf")
+                    Destination.SHELF -> ShelfScreen()
                     Destination.SETTINGS -> SettingsScreen()
                 }
             }
