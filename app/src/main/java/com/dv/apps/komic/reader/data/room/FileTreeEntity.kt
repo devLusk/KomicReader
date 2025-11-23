@@ -5,12 +5,12 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    "files",
+    "file_tree",
     indices = [
         Index("path", unique = true)
     ]
 )
-data class FileEntity(
+data class FileTreeEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 

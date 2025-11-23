@@ -7,10 +7,10 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface FileDAO {
+interface FileTreeDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun create(entity: FileEntity)
+    suspend fun create(entity: FileTreeEntity)
 
-    @Query("SELECT * FROM files")
-    fun all(): Flow<List<FileEntity>>
+    @Query("SELECT * FROM file_tree")
+    fun all(): Flow<List<FileTreeEntity>>
 }

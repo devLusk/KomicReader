@@ -2,15 +2,15 @@ package com.dv.apps.komic.reader.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.dv.apps.komic.reader.data.room.FileDAO
-import com.dv.apps.komic.reader.data.room.FileEntity
+import com.dv.apps.komic.reader.data.room.FileTreeDAO
+import com.dv.apps.komic.reader.data.room.FileTreeEntity
 
 @Database(
     entities = [
-        FileEntity::class
+        FileTreeEntity::class
     ],
     version = 1
 )
 abstract class KomicReaderDatabase : RoomDatabase() {
-    abstract val fileDAO: FileDAO
+    abstract val fileTreeDAO: FileTreeDAO
 }

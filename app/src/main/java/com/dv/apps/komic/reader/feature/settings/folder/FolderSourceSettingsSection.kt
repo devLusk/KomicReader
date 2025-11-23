@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dv.apps.komic.reader.R
-import com.dv.apps.komic.reader.domain.file.File
+import com.dv.apps.komic.reader.domain.model.DocumentTree
 import com.dv.apps.komic.reader.ext.dispatchFor
 import com.dv.apps.komic.reader.feature.settings.SettingsSection
 import com.dv.apps.komic.reader.ui.theme.KomicReaderTheme
@@ -98,7 +98,7 @@ private fun FolderScreenPreview1() {
             FolderSourceSettingsSection(
                 state = State(
                     selectedFolders = List(4) {
-                        File(
+                        DocumentTree(
                             "/root/sdcard:folder/$it",
                             "folder/$it"
                         )
