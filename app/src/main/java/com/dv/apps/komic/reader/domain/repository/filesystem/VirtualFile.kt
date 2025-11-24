@@ -1,10 +1,10 @@
 package com.dv.apps.komic.reader.domain.repository.filesystem
 
-sealed interface FileTree {
+sealed interface VirtualFile {
     val name: String
     val path: String
 
-    object Empty : FileTree {
+    data object Empty : VirtualFile {
         override val name = ""
         override val path = ""
     }
@@ -12,12 +12,12 @@ sealed interface FileTree {
     class Folder(
         override val name: String,
         override val path: String,
-        val children: List<FileTree>
-    ) : FileTree
+        val children: List<VirtualFile>
+    ) : VirtualFile
 
     class File(
         override val name: String,
         override val path: String,
         val type: String
-    ) : FileTree
+    ) : VirtualFile
 }

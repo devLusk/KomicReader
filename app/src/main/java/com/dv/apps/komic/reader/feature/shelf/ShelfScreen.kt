@@ -2,11 +2,14 @@ package com.dv.apps.komic.reader.feature.shelf
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,9 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dv.apps.komic.reader.R
-import com.dv.apps.komic.reader.domain.repository.filesystem.FileTree
+import com.dv.apps.komic.reader.domain.model.KomicPreviewTree
+import com.dv.apps.komic.reader.feature.common.KomicPreview
 import com.dv.apps.komic.reader.ui.theme.KomicReaderTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -45,27 +50,35 @@ fun ShelfScreen(
             style = MaterialTheme.typography.titleLarge
         )
 
-        LazyColumn(
-            Modifier.fillMaxSize()
-        ) {
-            items(state.fileTrees) {
-                ShelfFileTree(it)
-            }
+        state.komicPreviewTrees.forEach {
+            ShelfFileTree(it)
         }
     }
 }
 
 @Composable
-fun ShelfFileTree(fileTree: FileTree) {
-    when (fileTree) {
-        FileTree.Empty -> Text("Something wrong happened")
-        is FileTree.File -> Text("File: ${fileTree.name}")
-        is FileTree.Folder -> {
-            Column {
-                Text("Folder: ${fileTree.name}")
+fun ShelfFileTree(komicPreviewTree: KomicPreviewTree) {
+    when (komicPreviewTree) {
+        KomicPreviewTree.Empty -> Text("Something wrong happened")
+        is KomicPreviewTree.Done -> {
+            KomicPreview(
+                modifier = Modifier.padding(8.dp),
+                title = komicPreviewTree.title,
+                preview = komicPreviewTree.preview
+            )
+        }
 
-                for (child in fileTree.children) {
-                    ShelfFileTree(child)
+        is KomicPreviewTree.Nested -> {
+            Column {
+                Text(
+                    komicPreviewTree.title,
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                LazyVerticalGrid(GridCells.Fixed(4)) {
+                    items(komicPreviewTree.children) {
+                        ShelfFileTree(it)
+                    }
                 }
             }
         }
@@ -76,6 +89,63 @@ fun ShelfFileTree(fileTree: FileTree) {
 @Composable
 private fun ShelfScreenPreview() {
     KomicReaderTheme {
-        ShelfScreen()
+        ShelfScreen(
+            State(
+                komicPreviewTrees = listOf(
+                    KomicPreviewTree.Nested(
+                        "POKEMON",
+                        listOf(
+                            KomicPreviewTree.Done(
+                                "A"
+                            ),
+                            KomicPreviewTree.Done(
+                                "B"
+                            ), KomicPreviewTree.Done(
+                                "C"
+                            )
+                        )
+                    ),
+                    KomicPreviewTree.Nested(
+                        "DIGIMON",
+                        listOf(
+                            KomicPreviewTree.Done(
+                                "A"
+                            ),
+                            KomicPreviewTree.Done(
+                                "B"
+                            ), KomicPreviewTree.Done(
+                                "C"
+                            )
+                        )
+                    ),
+                    KomicPreviewTree.Nested(
+                        "CHAVEZ",
+                        listOf(
+                            KomicPreviewTree.Done(
+                                "A"
+                            ),
+                            KomicPreviewTree.Done(
+                                "B"
+                            ), KomicPreviewTree.Done(
+                                "C"
+                            )
+                        )
+                    ),
+                    KomicPreviewTree.Nested(
+                        "CHAVEZ",
+                        listOf(
+                            KomicPreviewTree.Done(
+                                "A"
+                            ),
+                            KomicPreviewTree.Done(
+                                "B"
+                            ), KomicPreviewTree.Done(
+                                "C"
+                            )
+                        )
+                    )
+                )
+            )
+        )
     }
 }
