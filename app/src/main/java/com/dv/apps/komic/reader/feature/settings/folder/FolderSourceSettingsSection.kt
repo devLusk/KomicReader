@@ -23,11 +23,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dv.apps.komic.reader.R
-import com.dv.apps.komic.reader.domain.model.DocumentTree
 import com.dv.apps.komic.reader.ext.dispatchFor
 import com.dv.apps.komic.reader.feature.settings.SettingsSection
 import com.dv.apps.komic.reader.ui.theme.KomicReaderTheme
 import org.koin.androidx.compose.koinViewModel
+import java.net.URLDecoder
+
+private val URI_DECODER: (String) -> String = {
+    URLDecoder.decode(it, "UTF-8")
+}
 
 @Composable
 fun FolderSourceSettingsSection() {
@@ -78,7 +82,9 @@ fun FolderSourceSettingsSection(
 
             Column(Modifier.padding(vertical = 8.dp)) {
                 for (folder in state.selectedFolders) {
-                    Text(folder.name)
+                    Text(
+                        URI_DECODER(folder).split(":").last()
+                    )
                 }
             }
         }
@@ -93,10 +99,7 @@ private fun FolderScreenPreview1() {
             FolderSourceSettingsSection(
                 state = State(
                     selectedFolders = List(4) {
-                        DocumentTree(
-                            "/root/sdcard:folder/$it",
-                            "folder/$it"
-                        )
+                        "/root/sdcard:folder/$it"
                     }
                 )
             )

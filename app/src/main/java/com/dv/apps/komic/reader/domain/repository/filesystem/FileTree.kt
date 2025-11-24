@@ -1,4 +1,4 @@
-package com.dv.apps.komic.reader.domain.model
+package com.dv.apps.komic.reader.domain.repository.filesystem
 
 sealed interface FileTree {
     val name: String

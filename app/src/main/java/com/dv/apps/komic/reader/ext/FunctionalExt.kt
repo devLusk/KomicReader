@@ -12,9 +12,9 @@ inline infix fun <A, B> ((A) -> Unit).dispatchFor(
 }
 
 inline fun <T, R> Flow<List<T>>.mapItems(
-    crossinline block: (T) -> R?
+    crossinline block: suspend (T) -> R?
 ) = map {
-    it.mapNotNull(block)
+    it.mapNotNull { block(it) }
 }
 
 suspend inline fun <T, R> Flow<T>.collectInto(

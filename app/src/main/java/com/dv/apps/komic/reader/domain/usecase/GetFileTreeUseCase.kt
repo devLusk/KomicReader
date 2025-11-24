@@ -1,10 +1,10 @@
 package com.dv.apps.komic.reader.domain.usecase
 
-import com.dv.apps.komic.reader.domain.file.FileTreeManager
-import com.dv.apps.komic.reader.domain.model.FileTree
+import com.dv.apps.komic.reader.domain.repository.filesystem.FileSystemManager
+import com.dv.apps.komic.reader.domain.repository.filesystem.FileTree
 
 class GetFileTreeUseCase(
-    private val fileTreeManager: FileTreeManager
+    private val fileSystemManager: FileSystemManager
 ) : suspend (String) -> FileTree {
-    override suspend fun invoke(path: String) = fileTreeManager.getFileTree(path)
+    override suspend fun invoke(path: String) = fileSystemManager.getFileTree(path)
 }

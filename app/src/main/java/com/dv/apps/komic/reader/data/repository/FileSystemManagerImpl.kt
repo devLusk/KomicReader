@@ -1,14 +1,15 @@
-package com.dv.apps.komic.reader.data.file
+package com.dv.apps.komic.reader.data.repository
 
 import android.content.Context
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
-import com.dv.apps.komic.reader.domain.file.FileTreeManager
-import com.dv.apps.komic.reader.domain.model.FileTree
+import com.dv.apps.komic.reader.domain.repository.filesystem.FileSystemManager
+import com.dv.apps.komic.reader.domain.repository.filesystem.FileTree
+import java.io.InputStream
 
-class FileTreeManagerImpl(
+class FileSystemManagerImpl(
     private val context: Context
-) : FileTreeManager {
+) : FileSystemManager {
     override fun getFileTree(
         path: String
     ): FileTree {
@@ -32,5 +33,10 @@ class FileTreeManagerImpl(
                 documentFile.type.orEmpty()
             )
         }
+    }
+
+    override fun openStream(fileTree: FileTree.File): InputStream? {
+        val uri = fileTree.path.toUri()
+        return context.contentResolver.openInputStream(uri)
     }
 }

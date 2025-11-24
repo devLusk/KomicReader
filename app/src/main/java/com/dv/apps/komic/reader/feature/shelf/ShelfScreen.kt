@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dv.apps.komic.reader.R
-import com.dv.apps.komic.reader.domain.model.FileTree
+import com.dv.apps.komic.reader.domain.repository.filesystem.FileTree
 import com.dv.apps.komic.reader.ui.theme.KomicReaderTheme
 import org.koin.androidx.compose.koinViewModel
 
