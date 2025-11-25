@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import com.dv.apps.komic.reader.R
-import com.dv.apps.komic.reader.domain.model.KomicPreviewTree
+import com.dv.apps.komic.reader.domain.model.PreviewTree
 import com.dv.apps.komic.reader.feature.common.KomicPreview
 import com.dv.apps.komic.reader.ui.theme.KomicReaderTheme
 import org.koin.androidx.compose.koinViewModel
@@ -81,7 +81,7 @@ fun ShelfScreen(
             )
         }
 
-        for (item in state.komicPreviewTrees) {
+        for (item in state.previewTrees) {
             ShelfPreviewTree(spanSize, item)
         }
 
@@ -91,22 +91,22 @@ fun ShelfScreen(
 
 fun LazyGridScope.ShelfPreviewTree(
     spanSize: Int,
-    komicPreviewTree: KomicPreviewTree
+    previewTree: PreviewTree
 ) {
-    when (komicPreviewTree) {
-        KomicPreviewTree.Empty -> item {
+    when (previewTree) {
+        PreviewTree.Empty -> item {
             Text("Something wrong happened")
         }
 
-        is KomicPreviewTree.Done -> item {
+        is PreviewTree.Done -> item {
             KomicPreview(
                 modifier = Modifier.padding(8.dp),
-                title = komicPreviewTree.title,
-                preview = komicPreviewTree.preview
+                title = previewTree.title,
+                preview = previewTree.preview
             )
         }
 
-        is KomicPreviewTree.Nested -> {
+        is PreviewTree.Nested -> {
             item(
                 span = { GridItemSpan(spanSize) }
             ) {
@@ -116,11 +116,11 @@ fun LazyGridScope.ShelfPreviewTree(
                 span = { GridItemSpan(spanSize) }
             ) {
                 Text(
-                    komicPreviewTree.title,
+                    previewTree.title,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
-            for (child in komicPreviewTree.children) {
+            for (child in previewTree.children) {
                 ShelfPreviewTree(spanSize, child)
             }
         }
@@ -133,42 +133,42 @@ private fun ShelfScreenPreview() {
     KomicReaderTheme {
         ShelfScreen(
             State(
-                komicPreviewTrees = listOf(
-                    KomicPreviewTree.Nested(
+                previewTrees = listOf(
+                    PreviewTree.Nested(
                         "POKEMON",
                         listOf(
-                            KomicPreviewTree.Done(
+                            PreviewTree.Done(
                                 "A"
                             ),
-                            KomicPreviewTree.Done(
+                            PreviewTree.Done(
                                 "B"
                             )
                         )
                     ),
-                    KomicPreviewTree.Nested(
+                    PreviewTree.Nested(
                         "DIGIMON",
                         listOf(
-                            KomicPreviewTree.Done(
+                            PreviewTree.Done(
                                 "A"
                             ),
-                            KomicPreviewTree.Done(
+                            PreviewTree.Done(
                                 "B"
                             )
                         )
                     ),
-                    KomicPreviewTree.Nested(
+                    PreviewTree.Nested(
                         "CROSSOVER",
                         listOf(
-                            KomicPreviewTree.Done(
+                            PreviewTree.Done(
                                 "A"
                             ),
-                            KomicPreviewTree.Nested(
+                            PreviewTree.Nested(
                                 "DIGIMON",
                                 listOf(
-                                    KomicPreviewTree.Done(
+                                    PreviewTree.Done(
                                         "A"
                                     ),
-                                    KomicPreviewTree.Done(
+                                    PreviewTree.Done(
                                         "B"
                                     )
                                 )

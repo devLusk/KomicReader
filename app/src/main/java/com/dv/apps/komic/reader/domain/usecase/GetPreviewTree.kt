@@ -1,12 +1,12 @@
 package com.dv.apps.komic.reader.domain.usecase
 
-import com.dv.apps.komic.reader.domain.model.KomicPreviewTree
+import com.dv.apps.komic.reader.domain.model.PreviewTree
 import com.dv.apps.komic.reader.domain.repository.ThumbnailManager
 import com.dv.apps.komic.reader.domain.model.VirtualFile
 
-class GetKomicPreviewTree(
+class GetPreviewTree(
     private val thumbnailManager: ThumbnailManager
-) : suspend (VirtualFile) -> KomicPreviewTree {
+) : suspend (VirtualFile) -> PreviewTree {
     override suspend fun invoke(
         virtualFile: VirtualFile
     ) = when (virtualFile) {
@@ -14,13 +14,13 @@ class GetKomicPreviewTree(
         is VirtualFile.Folder -> getPreviewTree(virtualFile)
     }
 
-    private suspend fun getPreviewTree(file: VirtualFile.File): KomicPreviewTree {
+    private suspend fun getPreviewTree(file: VirtualFile.File): PreviewTree {
         val image = thumbnailManager.getOrCache(file)
-        return KomicPreviewTree.Done(file.name, image)
+        return PreviewTree.Done(file.name, image)
     }
 
-    private suspend fun getPreviewTree(file: VirtualFile.Folder): KomicPreviewTree {
+    private suspend fun getPreviewTree(file: VirtualFile.Folder): PreviewTree {
         val children = file.children.map { invoke(it) }
-        return KomicPreviewTree.Nested(file.name, children)
+        return PreviewTree.Nested(file.name, children)
     }
 }
