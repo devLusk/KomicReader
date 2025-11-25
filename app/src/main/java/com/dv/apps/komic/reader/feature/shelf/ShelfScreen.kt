@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.MaterialTheme
@@ -102,10 +101,6 @@ fun LazyGridScope.ShelfPreviewTree(
     previewTree: PreviewTree
 ) {
     when (previewTree) {
-        PreviewTree.Empty -> item {
-            Text("Something wrong happened")
-        }
-
         is PreviewTree.Done -> item {
             KomicPreview(
                 modifier = Modifier.padding(8.dp),
@@ -114,7 +109,7 @@ fun LazyGridScope.ShelfPreviewTree(
             )
         }
 
-        is PreviewTree.Nested -> {
+        is PreviewTree.More -> {
             item(span = { span }) {
                 Spacer(Modifier.height(32.dp))
             }
@@ -140,7 +135,7 @@ private fun ShelfScreenPreview() {
         ShelfScreen(
             State(
                 previewTrees = listOf(
-                    PreviewTree.Nested(
+                    PreviewTree.More(
                         "POKEMON",
                         listOf(
                             PreviewTree.Done(
@@ -151,7 +146,7 @@ private fun ShelfScreenPreview() {
                             )
                         )
                     ),
-                    PreviewTree.Nested(
+                    PreviewTree.More(
                         "DIGIMON",
                         listOf(
                             PreviewTree.Done(
@@ -162,13 +157,13 @@ private fun ShelfScreenPreview() {
                             )
                         )
                     ),
-                    PreviewTree.Nested(
+                    PreviewTree.More(
                         "CROSSOVER",
                         listOf(
                             PreviewTree.Done(
                                 "A"
                             ),
-                            PreviewTree.Nested(
+                            PreviewTree.More(
                                 "DIGIMON",
                                 listOf(
                                     PreviewTree.Done(

@@ -3,9 +3,7 @@ package com.dv.apps.komic.reader.domain.model
 import java.io.File
 
 sealed interface PreviewTree {
-    data object Empty: PreviewTree
-
-    data class Nested(
+    data class More(
         val title: String,
         val children: List<PreviewTree>
     ): PreviewTree

@@ -39,6 +39,7 @@ class ShelfScreenViewModel(
                 settings.horizontalPreviewSpanSize
             )
         }
+        .flowOn(Dispatchers.Default)
         .stateIn(
             viewModelScope,
             SharingStarted.Lazily,

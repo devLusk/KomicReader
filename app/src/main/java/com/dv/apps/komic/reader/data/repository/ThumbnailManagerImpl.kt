@@ -1,8 +1,11 @@
 package com.dv.apps.komic.reader.data.repository
 
 import android.content.Context
-import com.dv.apps.komic.reader.domain.repository.ThumbnailManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.ThumbnailUtils
 import com.dv.apps.komic.reader.domain.model.VirtualFile
+import com.dv.apps.komic.reader.domain.repository.ThumbnailManager
 import com.dv.apps.komic.reader.domain.repository.VirtualFilesystem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -33,6 +36,20 @@ class ThumbnailManagerImpl(
             if (zip.nextEntry == null) return@withContext null
             thumbnailFile.outputStream().use(zip::copyTo)
         }
+
+        val bitmap = BitmapFactory.decodeFile(thumbnailFile.absolutePath)
+        val bitmapThumbnail = ThumbnailUtils.extractThumbnail(
+            bitmap,
+            bitmap.width / 10,
+            bitmap.height / 10
+        )
+
+        thumbnailFile.outputStream().use {
+            bitmapThumbnail.compress(Bitmap.CompressFormat.JPEG, 100, it)
+        }
+
+        bitmap.recycle()
+        bitmapThumbnail.recycle()
 
         thumbnailFile
     }
