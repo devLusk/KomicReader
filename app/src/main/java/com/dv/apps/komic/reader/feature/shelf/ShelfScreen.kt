@@ -1,15 +1,16 @@
 package com.dv.apps.komic.reader.feature.shelf
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,30 +38,46 @@ fun ShelfScreen() {
     }
 }
 
+//TODO(fetch it dynamically from user's settings)
+const val SPAN = 4
+
 @Composable
 fun ShelfScreen(
     state: State,
     dispatchIntent: (Intent) -> Unit = {}
 ) {
-    Column(
-        Modifier.windowInsetsPadding(WindowInsets.statusBars)
+    LazyVerticalGrid(
+        GridCells.Fixed(SPAN),
+        Modifier.padding(8.dp)
     ) {
-        Text(
-            stringResource(R.string.shelf_screen_title),
-            style = MaterialTheme.typography.titleLarge
-        )
+        item { Spacer(Modifier.windowInsetsPadding(WindowInsets.statusBars)) }
 
-        state.komicPreviewTrees.forEach {
-            ShelfFileTree(it)
+        item(
+            span = { GridItemSpan(SPAN) }
+        ) {
+            Text(
+                stringResource(R.string.shelf_screen_title),
+                style = MaterialTheme.typography.titleLarge
+            )
         }
+
+        for (item in state.komicPreviewTrees) {
+            ShelfFileTreePreview(item)
+        }
+
+        item { Spacer(Modifier.windowInsetsPadding(WindowInsets.navigationBars)) }
     }
 }
 
-@Composable
-fun ShelfFileTree(komicPreviewTree: KomicPreviewTree) {
+fun LazyGridScope.ShelfFileTreePreview(
+    komicPreviewTree: KomicPreviewTree
+) {
     when (komicPreviewTree) {
-        KomicPreviewTree.Empty -> Text("Something wrong happened")
-        is KomicPreviewTree.Done -> {
+        KomicPreviewTree.Empty -> item {
+            Text("Something wrong happened")
+        }
+
+        is KomicPreviewTree.Done -> item {
             KomicPreview(
                 modifier = Modifier.padding(8.dp),
                 title = komicPreviewTree.title,
@@ -69,17 +86,21 @@ fun ShelfFileTree(komicPreviewTree: KomicPreviewTree) {
         }
 
         is KomicPreviewTree.Nested -> {
-            Column {
+            item(
+                span = { GridItemSpan(SPAN) }
+            ) {
+                Spacer(Modifier.height(32.dp))
+            }
+            item(
+                span = { GridItemSpan(SPAN) }
+            ) {
                 Text(
                     komicPreviewTree.title,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleMedium
                 )
-
-                LazyVerticalGrid(GridCells.Fixed(4)) {
-                    items(komicPreviewTree.children) {
-                        ShelfFileTree(it)
-                    }
-                }
+            }
+            for (child in komicPreviewTree.children) {
+                ShelfFileTreePreview(child)
             }
         }
     }
@@ -100,8 +121,6 @@ private fun ShelfScreenPreview() {
                             ),
                             KomicPreviewTree.Done(
                                 "B"
-                            ), KomicPreviewTree.Done(
-                                "C"
                             )
                         )
                     ),
@@ -113,34 +132,25 @@ private fun ShelfScreenPreview() {
                             ),
                             KomicPreviewTree.Done(
                                 "B"
-                            ), KomicPreviewTree.Done(
-                                "C"
                             )
                         )
                     ),
                     KomicPreviewTree.Nested(
-                        "CHAVEZ",
+                        "CROSSOVER",
                         listOf(
                             KomicPreviewTree.Done(
                                 "A"
                             ),
-                            KomicPreviewTree.Done(
-                                "B"
-                            ), KomicPreviewTree.Done(
-                                "C"
-                            )
-                        )
-                    ),
-                    KomicPreviewTree.Nested(
-                        "CHAVEZ",
-                        listOf(
-                            KomicPreviewTree.Done(
-                                "A"
-                            ),
-                            KomicPreviewTree.Done(
-                                "B"
-                            ), KomicPreviewTree.Done(
-                                "C"
+                            KomicPreviewTree.Nested(
+                                "DIGIMON",
+                                listOf(
+                                    KomicPreviewTree.Done(
+                                        "A"
+                                    ),
+                                    KomicPreviewTree.Done(
+                                        "B"
+                                    )
+                                )
                             )
                         )
                     )
