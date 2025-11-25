@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.MaterialTheme
@@ -43,38 +44,45 @@ fun ShelfScreen() {
 }
 
 @Composable
+fun getSettingsSpan(state: State): Int? {
+    val configuration = LocalConfiguration.current
+    val isVertical = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
+    return if (isVertical) {
+        state.verticalPreviewSpanSize
+    } else {
+        state.horizontalPreviewSpanSize
+    }.takeIf { it > 0 }
+}
+
+@Composable
+fun getDefaultSpan(): Int {
+    val windowInfo = currentWindowAdaptiveInfo(supportLargeAndXLargeWidth = true)
+    val windowSizeClass = windowInfo.windowSizeClass
+    val horizontallyLarge = windowSizeClass.isWidthAtLeastBreakpoint(
+        WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND
+    )
+    return if (horizontallyLarge) {
+        4
+    } else {
+        2
+    }
+}
+
+@Composable
 fun ShelfScreen(
     state: State,
     dispatchIntent: (Intent) -> Unit = {}
 ) {
-    val configuration = LocalConfiguration.current
-    val isVertical = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-
-    val spanSize = if (isVertical) {
-        state.verticalPreviewColumnSize
-    } else {
-        state.horizontalPreviewColumnSize
-    }.takeIf { it > 0 } ?: run {
-        val windowInfo = currentWindowAdaptiveInfo(supportLargeAndXLargeWidth = true)
-        val windowSizeClass = windowInfo.windowSizeClass
-        val horizontallyLarge = windowSizeClass.isWidthAtLeastBreakpoint(
-            WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND
-        )
-        if (horizontallyLarge) {
-            4
-        } else {
-            2
-        }
-    }
+    val columns = getSettingsSpan(state) ?: getDefaultSpan()
+    val span = GridItemSpan(columns)
 
     LazyVerticalGrid(
-        GridCells.Fixed(spanSize)
+        GridCells.Fixed(columns)
     ) {
         item { Spacer(Modifier.windowInsetsPadding(WindowInsets.statusBars)) }
 
-        item(
-            span = { GridItemSpan(spanSize) }
-        ) {
+        item(span = { span }) {
             Text(
                 stringResource(R.string.shelf_screen_title),
                 style = MaterialTheme.typography.titleLarge
@@ -82,7 +90,7 @@ fun ShelfScreen(
         }
 
         for (item in state.previewTrees) {
-            ShelfPreviewTree(spanSize, item)
+            ShelfPreviewTree(span, item)
         }
 
         item { Spacer(Modifier.windowInsetsPadding(WindowInsets.navigationBars)) }
@@ -90,7 +98,7 @@ fun ShelfScreen(
 }
 
 fun LazyGridScope.ShelfPreviewTree(
-    spanSize: Int,
+    span: GridItemSpan,
     previewTree: PreviewTree
 ) {
     when (previewTree) {
@@ -107,21 +115,19 @@ fun LazyGridScope.ShelfPreviewTree(
         }
 
         is PreviewTree.Nested -> {
-            item(
-                span = { GridItemSpan(spanSize) }
-            ) {
+            item(span = { span }) {
                 Spacer(Modifier.height(32.dp))
             }
-            item(
-                span = { GridItemSpan(spanSize) }
-            ) {
+
+            item(span = { span }) {
                 Text(
                     previewTree.title,
                     style = MaterialTheme.typography.titleMedium
                 )
             }
+
             for (child in previewTree.children) {
-                ShelfPreviewTree(spanSize, child)
+                ShelfPreviewTree(span, child)
             }
         }
     }

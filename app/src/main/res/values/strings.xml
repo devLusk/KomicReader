@@ -5,7 +5,10 @@
     <string name="menu_shelf">Shelf</string>
     <string name="menu_settings">Configuration</string>
     
-    <string name="folder_source_settings_section_title">Selected folders</string>
+    <string name="settings_section_selected_folders_title">Selected folders</string>
+    <string name="settings_section_preview_options_title">Preview options</string>
+    <string name="settings_section_preview_options_vertical_span">Vertical preview span size</string>
+    <string name="settings_section_preview_options_horizontal_span">Horizontal preview span size</string>
 
     <string name="shelf_screen_title">Your books</string>
 </resources>

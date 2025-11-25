@@ -4,7 +4,10 @@
     <string name="menu_shelf">Prateleira</string>
     <string name="menu_settings">Configuração</string>
 
-    <string name="folder_source_settings_section_title">Pastas selecionadas</string>
+    <string name="settings_section_selected_folders_title">Pastas selecionadas</string>
+    <string name="settings_section_preview_options_title">Opções de pré-visualização</string>
+    <string name="settings_section_preview_options_vertical_span">Contagem de colunas na vertical</string>
+    <string name="settings_section_preview_options_horizontal_span">Contagem de colunas na horizontal</string>
 
     <string name="shelf_screen_title">Seus livros</string>
 </resources>

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.dv.apps.komic.reader.feature.settings.folder.FolderSourceSettingsSection
+import com.dv.apps.komic.reader.feature.settings.preview.PreviewSettingsSection
 import com.dv.apps.komic.reader.ui.theme.KomicReaderTheme
 
 @Composable
@@ -26,6 +27,9 @@ fun SettingsScreen() {
     ) {
         SettingsSection {
             FolderSourceSettingsSection()
+        }
+        SettingsSection {
+            PreviewSettingsSection()
         }
     }
 }

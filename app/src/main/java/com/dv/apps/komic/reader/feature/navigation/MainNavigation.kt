@@ -10,6 +10,7 @@ import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
@@ -24,7 +25,7 @@ import com.dv.apps.komic.reader.ui.theme.KomicReaderTheme
 
 @Composable
 fun MainNavigation() {
-    val navigationStack = remember { mutableStateListOf(Destination.HOME) }
+    val navigationStack = rememberSaveable { mutableStateListOf(Destination.HOME) }
     val navigationSuiteState = rememberNavigationSuiteScaffoldState()
 
     NavigationSuiteScaffold(

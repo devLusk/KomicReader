@@ -23,23 +23,23 @@ class SettingsManagerImpl(
         }
     }
 
-    override suspend fun setHorizontalPreviewColumnSize(size: Int) {
+    override suspend fun setVerticalPreviewSpanSize(size: Int) {
         context.settingsDatastore.updateData {
-            it.copy { horizontalPreviewColumnSize = size }
+            it.copy { verticalPreviewSpanSize = size }
         }
     }
 
-    override suspend fun setVerticalPreviewColumnSize(size: Int) {
+    override suspend fun setHorizontalPreviewSpanSize(size: Int) {
         context.settingsDatastore.updateData {
-            it.copy { verticalPreviewColumnSize = size }
+            it.copy { horizontalPreviewSpanSize = size }
         }
     }
 
     override fun getSettings() = context.settingsDatastore.data.map {
         Settings(
             it.selectedFoldersList,
-            it.horizontalPreviewColumnSize,
-            it.verticalPreviewColumnSize
+            it.verticalPreviewSpanSize,
+            it.horizontalPreviewSpanSize,
         )
     }
 }

@@ -7,15 +7,17 @@ import com.dv.apps.komic.reader.domain.repository.SettingsManager
 import com.dv.apps.komic.reader.domain.repository.VirtualFilesystem
 import com.dv.apps.komic.reader.domain.usecase.GetPreviewTree
 import com.dv.apps.komic.reader.ext.mapItems
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 data class State(
     val previewTrees: List<PreviewTree> = emptyList(),
-    val verticalPreviewColumnSize: Int = 0,
-    val horizontalPreviewColumnSize: Int = 0,
+    val verticalPreviewSpanSize: Int = 1,
+    val horizontalPreviewSpanSize: Int = 1,
     val isLoading: Boolean = false
 )
 
@@ -33,8 +35,8 @@ class ShelfScreenViewModel(
         .combine(settingsManager.getSettings()) { preview, settings ->
             State(
                 preview,
-                settings.verticalPreviewColumnSize,
-                settings.horizontalPreviewColumnSize
+                settings.verticalPreviewSpanSize,
+                settings.horizontalPreviewSpanSize
             )
         }
         .stateIn(

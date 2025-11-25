@@ -61,7 +61,7 @@ fun FolderSourceSettingsSection(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                stringResource(R.string.folder_source_settings_section_title),
+                stringResource(R.string.settings_section_selected_folders_title),
                 style = MaterialTheme.typography.titleMedium
             )
 
