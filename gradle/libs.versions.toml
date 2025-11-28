@@ -15,7 +15,7 @@ koinBom = "4.1.1"
 navigation3 = "1.0.0"
 room = "2.8.4"
 datastore = "1.2.0"
-protobufLite = "4.32.1"
+protobufLite = "4.33.1"
 coil = "3.3.0"
 palette = "1.0.0"
 
