@@ -9,6 +9,9 @@ import com.dv.apps.komic.reader.platform.PlatformFileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 class VirtualFileSystemImpl(
@@ -36,24 +39,11 @@ class VirtualFileSystemImpl(
         quality: Settings.Quality
     ): VirtualFile = withContext(Dispatchers.IO) {
         when (platformFile.type) {
-            PlatformFile.Type.FILE -> {
+            PlatformFile.Type.FILE ->
                 buildFile(platformFile, quality)
-            }
 
-            PlatformFile.Type.FOLDER -> {
-                val children = platformFileManager
-                    .listFiles(platformFile)
-                    .map {
-                        async {
-                            buildTree(it, quality)
-                        }
-                    }
-                VirtualFile.Folder(
-                    platformFile.name,
-                    platformFile.descriptor,
-                    children.awaitAll()
-                )
-            }
+            PlatformFile.Type.FOLDER ->
+                buildFolder(platformFile, quality)
         }
     }
 
@@ -74,11 +64,80 @@ class VirtualFileSystemImpl(
         )
     }
 
+    private suspend fun buildFolder(
+        platformFile: PlatformFile,
+        quality: Settings.Quality
+    ): VirtualFile.Folder = withContext(Dispatchers.IO) {
+        val children = platformFileManager
+            .listFiles(platformFile)
+            .map {
+                async {
+                    buildTree(it, quality)
+                }
+            }
+        VirtualFile.Folder(
+            platformFile.name,
+            platformFile.descriptor,
+            children.awaitAll()
+        )
+    }
+
     override fun count(
         virtualFile: VirtualFile
     ): Int = when (virtualFile) {
         is VirtualFile.File -> 1
         is VirtualFile.File.WithThumbnail -> 1
         is VirtualFile.Folder -> virtualFile.children.sumOf(::count)
+    }
+
+    override suspend fun buildSuspendedTree(
+        quality: Settings.Quality,
+        paths: List<String>,
+        suspend: suspend () -> Unit
+    ): Flow<VirtualFile> = flow {
+        val platformFiles = paths.mapNotNull(platformFileManager::get)
+
+        platformFiles.forEach {
+            buildSuspendedTree(
+                it,
+                quality,
+                suspend
+            )
+        }
+    }
+
+    private suspend fun FlowCollector<VirtualFile>.buildSuspendedTree(
+        platformFile: PlatformFile,
+        quality: Settings.Quality,
+        suspend: suspend () -> Unit
+    ) {
+        when (platformFile.type) {
+            PlatformFile.Type.FILE -> {
+                suspend()
+
+                val file = buildFile(
+                    platformFile,
+                    quality
+                )
+
+                emit(file)
+            }
+
+            PlatformFile.Type.FOLDER -> {
+                val folder = VirtualFile.Folder(
+                    platformFile.name,
+                    platformFile.descriptor,
+                    emptyList()
+                )
+
+                emit(folder)
+
+                platformFileManager
+                    .listFiles(platformFile)
+                    .forEach { platformFile ->
+                        buildSuspendedTree(platformFile, quality, suspend)
+                    }
+            }
+        }
     }
 }
