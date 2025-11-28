@@ -22,6 +22,7 @@ class PlatformFileManagerImpl(
         file.descriptor.toUri()
     )
         ?.listFiles()
+        ?.sortedBy { it.name }
         ?.map(DocumentFile::toDomain) ?: emptyList()
 
     override fun open(
