@@ -24,8 +24,7 @@ class VirtualFileSystemImpl(
     ): VirtualFile = withContext(Dispatchers.IO) {
         val folders = paths.mapNotNull(platformFileManager::get)
         VirtualFile.Folder(
-            name = "/",
-            path = "/",
+            PlatformFile(),
             children = folders.map {
                 async {
                     buildTree(it, quality)
@@ -39,10 +38,10 @@ class VirtualFileSystemImpl(
         quality: Settings.Quality
     ): VirtualFile = withContext(Dispatchers.IO) {
         when (platformFile.type) {
-            PlatformFile.Type.FILE ->
+            is PlatformFile.Type.File ->
                 buildFile(platformFile, quality)
 
-            PlatformFile.Type.FOLDER ->
+            PlatformFile.Type.Folder ->
                 buildFolder(platformFile, quality)
         }
     }
@@ -51,11 +50,7 @@ class VirtualFileSystemImpl(
         platformFile: PlatformFile,
         quality: Settings.Quality
     ): VirtualFile {
-        val virtualFile = VirtualFile.File(
-            platformFile.name,
-            platformFile.descriptor,
-            platformFile.mimeType
-        )
+        val virtualFile = VirtualFile.File(platformFile)
         val thumbnail = thumbnailManager.get(platformFile, quality) ?: return virtualFile
 
         return VirtualFile.File.WithThumbnail(
@@ -76,8 +71,7 @@ class VirtualFileSystemImpl(
                 }
             }
         VirtualFile.Folder(
-            platformFile.name,
-            platformFile.descriptor,
+            platformFile,
             children.awaitAll()
         )
     }
@@ -112,7 +106,7 @@ class VirtualFileSystemImpl(
         suspend: suspend () -> Unit
     ) {
         when (platformFile.type) {
-            PlatformFile.Type.FILE -> {
+            is PlatformFile.Type.File -> {
                 suspend()
 
                 val file = buildFile(
@@ -123,12 +117,8 @@ class VirtualFileSystemImpl(
                 emit(file)
             }
 
-            PlatformFile.Type.FOLDER -> {
-                val folder = VirtualFile.Folder(
-                    platformFile.name,
-                    platformFile.descriptor,
-                    emptyList()
-                )
+            PlatformFile.Type.Folder -> {
+                val folder = VirtualFile.Folder(platformFile)
 
                 emit(folder)
 

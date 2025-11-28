@@ -8,16 +8,15 @@ import com.dv.apps.komic.reader.data.room.thumbnail.ThumbnailEntity
 import com.dv.apps.komic.reader.domain.filesystem.VirtualFile
 import com.dv.apps.komic.reader.domain.model.Settings
 import com.dv.apps.komic.reader.domain.repository.CacheManager
+import com.dv.apps.komic.reader.domain.repository.FileReader
 import com.dv.apps.komic.reader.domain.repository.ThumbnailManager
 import com.dv.apps.komic.reader.platform.PlatformFile
-import com.dv.apps.komic.reader.platform.PlatformFileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.zip.ZipInputStream
 
 class ThumbnailManagerImpl(
-    private val platformFileManager: PlatformFileManager,
+    private val fileReader: FileReader,
     private val cacheManager: CacheManager,
     private val thumbnailDao: ThumbnailDao
 ) : ThumbnailManager {
@@ -37,13 +36,12 @@ class ThumbnailManagerImpl(
     ): VirtualFile.Thumbnail? = withContext(Dispatchers.IO) {
         val tmpFile = File.createTempFile("tmp_thumbnail", "")
 
-        platformFileManager.open(platformFile).run(::ZipInputStream).use { zip ->
-            if (zip.nextEntry == null) {
-                tmpFile.delete()
-                return@withContext null
+        fileReader.open(platformFile)?.use { fileReaderState ->
+            if (!fileReaderState.hasNext()) return@withContext null
+            tmpFile.outputStream().use { outputStream ->
+                fileReaderState.next().readTo(outputStream)
             }
-            tmpFile.outputStream().use(zip::copyTo)
-        }
+        } ?: return@withContext null
 
         val factor = getFactorForQuality(quality)
         val decode = BitmapFactory.decodeFile(tmpFile.absolutePath)

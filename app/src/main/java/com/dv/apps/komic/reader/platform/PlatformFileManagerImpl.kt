@@ -35,11 +35,10 @@ class PlatformFileManagerImpl(
 
 private fun DocumentFile.toDomain() = PlatformFile(
     "$uri",
-    if (isDirectory) {
-        PlatformFile.Type.FOLDER
-    } else {
-        PlatformFile.Type.FILE
-    },
     name.orEmpty(),
-    type.orEmpty()
+    if (isDirectory) {
+        PlatformFile.Type.Folder
+    } else {
+        PlatformFile.Type.File(type.orEmpty())
+    }
 )

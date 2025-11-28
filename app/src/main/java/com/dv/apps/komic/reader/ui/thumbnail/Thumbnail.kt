@@ -21,8 +21,8 @@ import com.dv.apps.komic.reader.ui.theme.KomicReaderTheme
 
 @Composable
 fun Thumbnail(
-    modifier: Modifier = Modifier,
-    file: VirtualFile.File
+    file: VirtualFile.File,
+    modifier: Modifier = Modifier
 ) {
     OutlinedCard(modifier) {
         AsyncImage(

@@ -1,11 +1,13 @@
 package com.dv.apps.komic.reader.di
 
 import com.dv.apps.komic.reader.data.repository.CacheManagerImpl
+import com.dv.apps.komic.reader.data.repository.FileReaderImpl
 import com.dv.apps.komic.reader.data.repository.SettingsManagerImpl
 import com.dv.apps.komic.reader.data.repository.ThumbnailManagerImpl
 import com.dv.apps.komic.reader.data.repository.VirtualFileSystemImpl
 import com.dv.apps.komic.reader.domain.filesystem.VirtualFileSystem
 import com.dv.apps.komic.reader.domain.repository.CacheManager
+import com.dv.apps.komic.reader.domain.repository.FileReader
 import com.dv.apps.komic.reader.domain.repository.SettingsManager
 import com.dv.apps.komic.reader.domain.repository.ThumbnailManager
 import com.dv.apps.komic.reader.platform.PlatformFileManager
@@ -20,4 +22,5 @@ val repositoryModule = module {
     singleOf(::VirtualFileSystemImpl) bind VirtualFileSystem::class
     singleOf(::CacheManagerImpl) bind CacheManager::class
     singleOf(::ThumbnailManagerImpl) bind ThumbnailManager::class
+    singleOf(::FileReaderImpl) bind FileReader::class
 }

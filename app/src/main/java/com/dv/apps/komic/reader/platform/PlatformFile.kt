@@ -1,13 +1,15 @@
 package com.dv.apps.komic.reader.platform
 
 data class PlatformFile(
-    val descriptor: String,
-    val type: Type,
-    val name: String,
-    val mimeType: String
+    val descriptor: String = "",
+    val name: String = "",
+    val type: Type = Type.Folder
 ) {
-    enum class Type {
-        FILE,
-        FOLDER
+    sealed interface Type {
+        data object Folder : Type
+
+        data class File(
+            val mimeType: String
+        ) : Type
     }
 }

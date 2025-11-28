@@ -119,9 +119,7 @@ fun LazyGridScope.ShelfPreviewTree(
         }
 
         is VirtualFile.File -> item {
-            Thumbnail(
-                file = virtualFile
-            )
+            Thumbnail(file = virtualFile)
         }
 
         is VirtualFile.Folder -> {
@@ -154,7 +152,6 @@ private fun ShelfScreenPreview() {
                     children = listOf(
                         VirtualFile.Folder(
                             "POKEMON",
-                            "",
                             listOf(
                                 VirtualFile.File(
                                     "A"
@@ -169,7 +166,6 @@ private fun ShelfScreenPreview() {
                         ),
                         VirtualFile.Folder(
                             "DIGIMON",
-                            "",
                             listOf(
                                 VirtualFile.File(
                                     "A"
@@ -181,7 +177,6 @@ private fun ShelfScreenPreview() {
                         ),
                         VirtualFile.Folder(
                             "CROSSOVER",
-                            "",
                             listOf(
                                 VirtualFile.File(
                                     "A"
@@ -191,7 +186,6 @@ private fun ShelfScreenPreview() {
                                 ),
                                 VirtualFile.Folder(
                                     "CHAVEZ",
-                                    "",
                                     listOf(
                                         VirtualFile.File(
                                             "A"
