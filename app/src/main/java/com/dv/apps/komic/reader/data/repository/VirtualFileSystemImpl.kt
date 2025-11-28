@@ -9,9 +9,6 @@ import com.dv.apps.komic.reader.platform.PlatformFileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 class VirtualFileSystemImpl(
@@ -82,52 +79,5 @@ class VirtualFileSystemImpl(
         is VirtualFile.File -> 1
         is VirtualFile.File.WithThumbnail -> 1
         is VirtualFile.Folder -> virtualFile.children.sumOf(::count)
-    }
-
-    override suspend fun buildSuspendedTree(
-        quality: Settings.Quality,
-        paths: List<String>,
-        suspend: suspend () -> Unit
-    ): Flow<VirtualFile> = flow {
-        val platformFiles = paths.mapNotNull(platformFileManager::get)
-
-        platformFiles.forEach {
-            buildSuspendedTree(
-                it,
-                quality,
-                suspend
-            )
-        }
-    }
-
-    private suspend fun FlowCollector<VirtualFile>.buildSuspendedTree(
-        platformFile: PlatformFile,
-        quality: Settings.Quality,
-        suspend: suspend () -> Unit
-    ) {
-        when (platformFile.type) {
-            is PlatformFile.Type.File -> {
-                suspend()
-
-                val file = buildFile(
-                    platformFile,
-                    quality
-                )
-
-                emit(file)
-            }
-
-            PlatformFile.Type.Folder -> {
-                val folder = VirtualFile.Folder(platformFile)
-
-                emit(folder)
-
-                platformFileManager
-                    .listFiles(platformFile)
-                    .forEach { platformFile ->
-                        buildSuspendedTree(platformFile, quality, suspend)
-                    }
-            }
-        }
     }
 }

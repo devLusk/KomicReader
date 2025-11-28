@@ -1,7 +1,6 @@
 package com.dv.apps.komic.reader.domain.filesystem
 
 import com.dv.apps.komic.reader.domain.model.Settings
-import kotlinx.coroutines.flow.Flow
 
 interface VirtualFileSystem {
     suspend fun buildTree(
@@ -12,10 +11,4 @@ interface VirtualFileSystem {
     fun count(
         virtualFile: VirtualFile
     ): Int
-
-    suspend fun buildSuspendedTree(
-        quality: Settings.Quality,
-        paths: List<String>,
-        suspend: suspend () -> Unit
-    ): Flow<VirtualFile>
 }
