@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
 import com.dv.apps.komic.reader.data.room.thumbnail.ThumbnailDao
 import com.dv.apps.komic.reader.data.room.thumbnail.ThumbnailEntity
-import com.dv.apps.komic.reader.domain.filesystem.VirtualFile
+import com.dv.apps.komic.reader.domain.filesystem.tree.VirtualFileTree
 import com.dv.apps.komic.reader.domain.model.Settings
 import com.dv.apps.komic.reader.domain.repository.CacheManager
 import com.dv.apps.komic.reader.domain.repository.FileReader
@@ -33,7 +33,7 @@ class ThumbnailManagerImpl(
         id: Int,
         platformFile: PlatformFile,
         quality: Settings.Quality
-    ): VirtualFile.Thumbnail? = withContext(Dispatchers.IO) {
+    ): VirtualFileTree.Thumbnail? = withContext(Dispatchers.IO) {
         val tmpFile = File.createTempFile("tmp_thumbnail", "")
 
         fileReader.open(platformFile)?.use { fileReaderState ->
@@ -55,7 +55,7 @@ class ThumbnailManagerImpl(
             resized.compress(Bitmap.CompressFormat.JPEG, 100, it)
         }
 
-        val thumbnail = VirtualFile.Thumbnail(
+        val thumbnail = VirtualFileTree.Thumbnail(
             id,
             tmpFile.absolutePath,
             resized.width,
@@ -72,7 +72,7 @@ class ThumbnailManagerImpl(
     override suspend fun get(
         platformFile: PlatformFile,
         quality: Settings.Quality
-    ): VirtualFile.Thumbnail? {
+    ): VirtualFileTree.Thumbnail? {
         val cacheId = platformFile.descriptor.hashCode()
         val cache = thumbnailDao.getById(cacheId)
         if (cache != null && cache.quality == quality.ordinal) return cache.toDomain()
@@ -92,7 +92,7 @@ class ThumbnailManagerImpl(
         return finalThumbnail
     }
 
-    private fun VirtualFile.Thumbnail.toEntity() = ThumbnailEntity(
+    private fun VirtualFileTree.Thumbnail.toEntity() = ThumbnailEntity(
         id,
         path,
         width,
@@ -100,7 +100,7 @@ class ThumbnailManagerImpl(
         quality
     )
 
-    private fun ThumbnailEntity.toDomain() = VirtualFile.Thumbnail(
+    private fun ThumbnailEntity.toDomain() = VirtualFileTree.Thumbnail(
         id,
         path,
         width,

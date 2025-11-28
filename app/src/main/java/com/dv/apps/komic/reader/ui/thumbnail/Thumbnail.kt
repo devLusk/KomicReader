@@ -16,12 +16,12 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.dv.apps.komic.reader.R
-import com.dv.apps.komic.reader.domain.filesystem.VirtualFile
+import com.dv.apps.komic.reader.domain.filesystem.tree.VirtualFileTree
 import com.dv.apps.komic.reader.ui.theme.KomicReaderTheme
 
 @Composable
 fun Thumbnail(
-    file: VirtualFile.File,
+    file: VirtualFileTree.File,
     modifier: Modifier = Modifier
 ) {
     OutlinedCard(modifier) {
@@ -45,7 +45,7 @@ fun Thumbnail(
 @Composable
 fun Thumbnail(
     modifier: Modifier = Modifier,
-    file: VirtualFile.File.WithThumbnail
+    file: VirtualFileTree.File.WithThumbnail
 ) {
     OutlinedCard(modifier) {
         AsyncImage(
@@ -75,8 +75,8 @@ private fun ThumbnailPreview() {
                     Modifier
                         .aspectRatio(9 / 16f)
                         .padding(8.dp),
-                    VirtualFile.File.WithThumbnail(
-                        VirtualFile.File(
+                    VirtualFileTree.File.WithThumbnail(
+                        VirtualFileTree.File(
                             "Herry Pouter"
                         )
                     )

@@ -1,17 +1,17 @@
-package com.dv.apps.komic.reader.domain.filesystem
+package com.dv.apps.komic.reader.domain.filesystem.tree
 
 import com.dv.apps.komic.reader.platform.PlatformFile
 
-sealed interface VirtualFile {
+sealed interface VirtualFileTree {
     val name: String
 
     data class Folder(
         val platformFile: PlatformFile = PlatformFile(),
-        val children: List<VirtualFile> = emptyList()
-    ) : VirtualFile {
+        val children: List<VirtualFileTree> = emptyList()
+    ) : VirtualFileTree {
         constructor(
             name: String,
-            children: List<VirtualFile> = emptyList()
+            children: List<VirtualFileTree> = emptyList()
         ) : this(
             PlatformFile(name = name),
             children
@@ -22,7 +22,7 @@ sealed interface VirtualFile {
 
     data class File(
         val platformFile: PlatformFile
-    ) : VirtualFile {
+    ) : VirtualFileTree {
         constructor(name: String) : this(PlatformFile(name = name))
 
         override val name get() = platformFile.name
@@ -30,7 +30,7 @@ sealed interface VirtualFile {
         data class WithThumbnail(
             val virtualFile: File,
             val thumbnail: Thumbnail = Thumbnail()
-        ) : VirtualFile {
+        ) : VirtualFileTree {
             override val name get() = virtualFile.name
         }
     }

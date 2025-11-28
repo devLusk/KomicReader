@@ -1,14 +1,14 @@
-package com.dv.apps.komic.reader.domain.filesystem
+package com.dv.apps.komic.reader.domain.filesystem.tree
 
 import com.dv.apps.komic.reader.domain.model.Settings
 
-interface VirtualFileSystem {
+interface VirtualFileTreeManager {
     suspend fun buildTree(
         paths: List<String>,
         quality: Settings.Quality
-    ): VirtualFile
+    ): VirtualFileTree
 
     fun count(
-        virtualFile: VirtualFile
+        virtualFileTree: VirtualFileTree
     ): Int
 }

@@ -1,7 +1,7 @@
 package com.dv.apps.komic.reader.data.repository
 
-import com.dv.apps.komic.reader.domain.filesystem.VirtualFile
-import com.dv.apps.komic.reader.domain.filesystem.VirtualFileSystem
+import com.dv.apps.komic.reader.domain.filesystem.tree.VirtualFileTree
+import com.dv.apps.komic.reader.domain.filesystem.tree.VirtualFileTreeManager
 import com.dv.apps.komic.reader.domain.model.Settings
 import com.dv.apps.komic.reader.domain.repository.ThumbnailManager
 import com.dv.apps.komic.reader.platform.PlatformFile
@@ -11,16 +11,16 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
-class VirtualFileSystemImpl(
+class VirtualFileTreeManagerImpl(
     private val thumbnailManager: ThumbnailManager,
     private val platformFileManager: PlatformFileManager
-) : VirtualFileSystem {
+) : VirtualFileTreeManager {
     override suspend fun buildTree(
         paths: List<String>,
         quality: Settings.Quality
-    ): VirtualFile = withContext(Dispatchers.IO) {
+    ): VirtualFileTree = withContext(Dispatchers.IO) {
         val folders = paths.mapNotNull(platformFileManager::get)
-        VirtualFile.Folder(
+        VirtualFileTree.Folder(
             PlatformFile(),
             children = folders.map {
                 async {
@@ -33,7 +33,7 @@ class VirtualFileSystemImpl(
     private suspend fun buildTree(
         platformFile: PlatformFile,
         quality: Settings.Quality
-    ): VirtualFile = withContext(Dispatchers.IO) {
+    ): VirtualFileTree = withContext(Dispatchers.IO) {
         when (platformFile.type) {
             is PlatformFile.Type.File ->
                 buildFile(platformFile, quality)
@@ -46,12 +46,12 @@ class VirtualFileSystemImpl(
     private suspend fun buildFile(
         platformFile: PlatformFile,
         quality: Settings.Quality
-    ): VirtualFile {
-        val virtualFile = VirtualFile.File(platformFile)
-        val thumbnail = thumbnailManager.get(platformFile, quality) ?: return virtualFile
+    ): VirtualFileTree {
+        val virtualFileTree = VirtualFileTree.File(platformFile)
+        val thumbnail = thumbnailManager.get(platformFile, quality) ?: return virtualFileTree
 
-        return VirtualFile.File.WithThumbnail(
-            virtualFile,
+        return VirtualFileTree.File.WithThumbnail(
+            virtualFileTree,
             thumbnail
         )
     }
@@ -59,7 +59,7 @@ class VirtualFileSystemImpl(
     private suspend fun buildFolder(
         platformFile: PlatformFile,
         quality: Settings.Quality
-    ): VirtualFile.Folder = withContext(Dispatchers.IO) {
+    ): VirtualFileTree.Folder = withContext(Dispatchers.IO) {
         val children = platformFileManager
             .listFiles(platformFile)
             .map {
@@ -67,17 +67,17 @@ class VirtualFileSystemImpl(
                     buildTree(it, quality)
                 }
             }
-        VirtualFile.Folder(
+        VirtualFileTree.Folder(
             platformFile,
             children.awaitAll()
         )
     }
 
     override fun count(
-        virtualFile: VirtualFile
-    ): Int = when (virtualFile) {
-        is VirtualFile.File -> 1
-        is VirtualFile.File.WithThumbnail -> 1
-        is VirtualFile.Folder -> virtualFile.children.sumOf(::count)
+        virtualFileTree: VirtualFileTree
+    ): Int = when (virtualFileTree) {
+        is VirtualFileTree.File -> 1
+        is VirtualFileTree.File.WithThumbnail -> 1
+        is VirtualFileTree.Folder -> virtualFileTree.children.sumOf(::count)
     }
 }

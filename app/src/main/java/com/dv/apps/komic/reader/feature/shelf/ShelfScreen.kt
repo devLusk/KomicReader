@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
-import com.dv.apps.komic.reader.domain.filesystem.VirtualFile
+import com.dv.apps.komic.reader.domain.filesystem.tree.VirtualFileTree
 import com.dv.apps.komic.reader.domain.model.Settings
 import com.dv.apps.komic.reader.feature.shelf.components.ShelfFilter
 import com.dv.apps.komic.reader.feature.shelf.components.ShelfHeader
@@ -109,33 +109,33 @@ fun ShelfScreen(
 
 fun LazyGridScope.ShelfPreviewTree(
     span: GridItemSpan,
-    virtualFile: VirtualFile
+    virtualFileTree: VirtualFileTree
 ) {
-    when (virtualFile) {
-        is VirtualFile.File.WithThumbnail -> item {
+    when (virtualFileTree) {
+        is VirtualFileTree.File.WithThumbnail -> item {
             Thumbnail(
-                file = virtualFile
+                file = virtualFileTree
             )
         }
 
-        is VirtualFile.File -> item {
-            Thumbnail(file = virtualFile)
+        is VirtualFileTree.File -> item {
+            Thumbnail(file = virtualFileTree)
         }
 
-        is VirtualFile.Folder -> {
+        is VirtualFileTree.Folder -> {
             item(span = { span }) {
                 Spacer(Modifier.height(16.dp))
             }
 
             item(span = { span }) {
                 Text(
-                    text = virtualFile.name.uppercase(),
+                    text = virtualFileTree.name.uppercase(),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
 
-            for (child in virtualFile.children) {
+            for (child in virtualFileTree.children) {
                 ShelfPreviewTree(span, child)
             }
         }
@@ -148,49 +148,49 @@ private fun ShelfScreenPreview() {
     KomicReaderTheme {
         ShelfScreen(
             State(
-                tree = VirtualFile.Folder(
+                tree = VirtualFileTree.Folder(
                     children = listOf(
-                        VirtualFile.Folder(
+                        VirtualFileTree.Folder(
                             "POKEMON",
                             listOf(
-                                VirtualFile.File(
+                                VirtualFileTree.File(
                                     "A"
                                 ),
-                                VirtualFile.File(
+                                VirtualFileTree.File(
                                     "B"
                                 ),
-                                VirtualFile.File(
+                                VirtualFileTree.File(
                                     "C"
                                 ),
                             )
                         ),
-                        VirtualFile.Folder(
+                        VirtualFileTree.Folder(
                             "DIGIMON",
                             listOf(
-                                VirtualFile.File(
+                                VirtualFileTree.File(
                                     "A"
                                 ),
-                                VirtualFile.File(
+                                VirtualFileTree.File(
                                     "B"
                                 ),
                             )
                         ),
-                        VirtualFile.Folder(
+                        VirtualFileTree.Folder(
                             "CROSSOVER",
                             listOf(
-                                VirtualFile.File(
+                                VirtualFileTree.File(
                                     "A"
                                 ),
-                                VirtualFile.File(
+                                VirtualFileTree.File(
                                     "B",
                                 ),
-                                VirtualFile.Folder(
+                                VirtualFileTree.Folder(
                                     "CHAVEZ",
                                     listOf(
-                                        VirtualFile.File(
+                                        VirtualFileTree.File(
                                             "A"
                                         ),
-                                        VirtualFile.File(
+                                        VirtualFileTree.File(
                                             "B"
                                         ),
                                     )

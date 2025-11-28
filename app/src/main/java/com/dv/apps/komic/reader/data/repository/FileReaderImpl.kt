@@ -1,6 +1,6 @@
 package com.dv.apps.komic.reader.data.repository
 
-import com.dv.apps.komic.reader.domain.filesystem.VirtualFile
+import com.dv.apps.komic.reader.domain.filesystem.tree.VirtualFileTree
 import com.dv.apps.komic.reader.domain.repository.FileReader
 import com.dv.apps.komic.reader.platform.PlatformFile
 import com.dv.apps.komic.reader.platform.PlatformFileManager
@@ -14,8 +14,8 @@ class FileReaderImpl(
     private val platformFileManager: PlatformFileManager
 ) : FileReader {
     override fun open(
-        virtualFile: VirtualFile.File
-    ) = open(virtualFile.platformFile)
+        virtualFileTree: VirtualFileTree.File
+    ) = open(virtualFileTree.platformFile)
 
     override fun open(platformFile: PlatformFile): FileReader.State? {
         val inputStream = platformFileManager.open(platformFile) ?: return null

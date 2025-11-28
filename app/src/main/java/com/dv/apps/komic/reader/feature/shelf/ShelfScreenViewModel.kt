@@ -2,8 +2,8 @@ package com.dv.apps.komic.reader.feature.shelf
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dv.apps.komic.reader.domain.filesystem.VirtualFile
-import com.dv.apps.komic.reader.domain.filesystem.VirtualFileSystem
+import com.dv.apps.komic.reader.domain.filesystem.tree.VirtualFileTree
+import com.dv.apps.komic.reader.domain.filesystem.tree.VirtualFileTreeManager
 import com.dv.apps.komic.reader.domain.model.Settings
 import com.dv.apps.komic.reader.domain.repository.SettingsManager
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 data class State(
-    val tree: VirtualFile = VirtualFile.Folder(),
+    val tree: VirtualFileTree = VirtualFileTree.Folder(),
     val settings: Settings = Settings(),
     val isLoading: Boolean = false
 )
@@ -22,7 +22,7 @@ sealed interface Intent
 
 class ShelfScreenViewModel(
     private val settingsManager: SettingsManager,
-    private val virtualFilesystem: VirtualFileSystem
+    private val virtualFilesystem: VirtualFileTreeManager
 ) : ViewModel() {
     val state = settingsManager
         .getSettings()
