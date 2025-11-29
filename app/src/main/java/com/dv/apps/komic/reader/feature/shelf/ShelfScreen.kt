@@ -124,10 +124,6 @@ fun LazyGridScope.ShelfPreviewTree(
 
         is VirtualFileTree.Folder -> {
             item(span = { span }) {
-                Spacer(Modifier.height(16.dp))
-            }
-
-            item(span = { span }) {
                 Text(
                     text = virtualFileTree.name.uppercase(),
                     style = MaterialTheme.typography.titleMedium,
